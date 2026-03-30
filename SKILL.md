@@ -1,11 +1,15 @@
 ---
 name: create-colleague
-description: 把同事蒸馏成 AI Skill。输入姓名自动采集飞书/钉钉数据，生成 Work Skill + Persona 两部分，支持持续进化。
+description: "Distill a colleague into an AI Skill. Auto-collect Feishu/DingTalk data, generate Work Skill + Persona, with continuous evolution. | 把同事蒸馏成 AI Skill，自动采集飞书/钉钉数据，生成 Work + Persona，支持持续进化。"
 argument-hint: "[colleague-name-or-slug]"
 version: "1.0.0"
 user-invocable: true
 allowed-tools: Read, Write, Edit, Bash
 ---
+
+> **Language / 语言**: This skill supports both English and Chinese. Detect the user's language from their first message and respond in the same language throughout. Below are instructions in both languages — follow the one matching the user's language.
+>
+> 本 Skill 支持中英文。根据用户第一条消息的语言，全程使用同一语言回复。下方提供了两种语言的指令，按用户语言选择对应版本执行。
 
 # 同事.skill 创建器（Claude Code 版）
 
@@ -415,6 +419,423 @@ python3 ${CLAUDE_SKILL_DIR}/tools/version_manager.py --action rollback --slug {s
 
 `/delete-colleague {slug}`：
 确认后执行：
+```bash
+rm -rf colleagues/{slug}
+```
+
+---
+---
+
+# English Version
+
+# Colleague.skill Creator (Claude Code Edition)
+
+## Trigger Conditions
+
+Activate when the user says any of the following:
+- `/create-colleague`
+- "Help me create a colleague skill"
+- "I want to distill a colleague"
+- "New colleague"
+- "Make a skill for XX"
+
+Enter evolution mode when the user says:
+- "I have new files" / "append"
+- "That's wrong" / "He wouldn't do that" / "He should be"
+- `/update-colleague {slug}`
+
+List all generated colleagues when the user says `/list-colleagues`.
+
+---
+
+## Tool Usage Rules
+
+This Skill runs in the Claude Code environment with the following tools:
+
+| Task | Tool |
+|------|------|
+| Read PDF documents | `Read` tool (native PDF support) |
+| Read image screenshots | `Read` tool (native image support) |
+| Read MD/TXT files | `Read` tool |
+| Parse Feishu message JSON export | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/feishu_parser.py` |
+| Feishu auto-collect (recommended) | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/feishu_auto_collector.py` |
+| Feishu docs (browser session) | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/feishu_browser.py` |
+| Feishu docs (MCP App Token) | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/feishu_mcp_client.py` |
+| DingTalk auto-collect | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/dingtalk_auto_collector.py` |
+| Parse email .eml/.mbox | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/email_parser.py` |
+| Write/update Skill files | `Write` / `Edit` tool |
+| Version management | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/version_manager.py` |
+| List existing Skills | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/skill_writer.py --action list` |
+
+**Base directory**: Skill files are written to `./colleagues/{slug}/` (relative to the project directory).
+For a global path, use `--base-dir ~/.openclaw/workspace/skills/colleagues`.
+
+---
+
+## Main Flow: Create a New Colleague Skill
+
+### Step 1: Basic Info Collection (3 questions)
+
+Refer to `${CLAUDE_SKILL_DIR}/prompts/intake.md` for the question sequence. Only ask 3 questions:
+
+1. **Alias / Codename** (required)
+2. **Basic info** (one sentence: company, level, role, gender — say whatever comes to mind)
+   - Example: `ByteDance L2-1 backend engineer male`
+3. **Personality profile** (one sentence: MBTI, zodiac, traits, corporate culture, impressions)
+   - Example: `INTJ Capricorn blame-shifter ByteDance-style strict in CR but never explains why`
+
+Everything except the alias can be skipped. Summarize and confirm before moving to the next step.
+
+### Step 2: Source Material Import
+
+Ask the user how they'd like to provide materials:
+
+```
+How would you like to provide source materials?
+
+  [A] Feishu Auto-Collect (recommended)
+      Enter name, auto-pull messages + docs + spreadsheets
+
+  [B] DingTalk Auto-Collect
+      Enter name, auto-pull docs + spreadsheets
+      Messages collected via browser (DingTalk API doesn't support message history)
+
+  [C] Feishu Link
+      Provide doc/Wiki link (browser session or MCP)
+
+  [D] Upload Files
+      PDF / images / exported JSON / email .eml
+
+  [E] Paste Text
+      Copy-paste text directly
+
+Can mix and match, or skip entirely (generate from manual info only).
+```
+
+---
+
+#### Option A: Feishu Auto-Collect (Recommended)
+
+First-time setup:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/feishu_auto_collector.py --setup
+```
+
+After setup, just enter the name:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/feishu_auto_collector.py \
+  --name "{name}" \
+  --output-dir ./knowledge/{slug} \
+  --msg-limit 1000 \
+  --doc-limit 20
+```
+
+Auto-collected content:
+- All messages sent by them in shared group chats (system messages and stickers filtered)
+- Feishu docs and Wikis they created/edited
+- Related spreadsheets (if accessible)
+
+After collection, `Read` the output files:
+- `knowledge/{slug}/messages.txt` → messages
+- `knowledge/{slug}/docs.txt` → document content
+- `knowledge/{slug}/collection_summary.json` → collection summary
+
+If collection fails (insufficient permissions / bot not in chat), inform user to:
+1. Add the Feishu App bot to relevant group chats
+2. Or switch to Option B/C
+
+---
+
+#### Option B: DingTalk Auto-Collect
+
+First-time setup:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/dingtalk_auto_collector.py --setup
+```
+
+Then enter the name:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/dingtalk_auto_collector.py \
+  --name "{name}" \
+  --output-dir ./knowledge/{slug} \
+  --msg-limit 500 \
+  --doc-limit 20 \
+  --show-browser   # add this flag on first use to complete DingTalk login
+```
+
+Collected content:
+- DingTalk docs and knowledge bases they created/edited
+- Spreadsheets
+- Messages (⚠️ DingTalk API doesn't support message history — auto-switches to browser scraping)
+
+After collection, `Read`:
+- `knowledge/{slug}/docs.txt`
+- `knowledge/{slug}/bitables.txt`
+- `knowledge/{slug}/messages.txt`
+
+If message collection fails, prompt user to upload chat screenshots.
+
+---
+
+#### Option C: Upload Files
+
+- **PDF / Images**: `Read` tool directly
+- **Feishu message JSON export**:
+  ```bash
+  python3 ${CLAUDE_SKILL_DIR}/tools/feishu_parser.py --file {path} --target "{name}" --output /tmp/feishu_out.txt
+  ```
+  Then `Read /tmp/feishu_out.txt`
+- **Email files .eml / .mbox**:
+  ```bash
+  python3 ${CLAUDE_SKILL_DIR}/tools/email_parser.py --file {path} --target "{name}" --output /tmp/email_out.txt
+  ```
+  Then `Read /tmp/email_out.txt`
+- **Markdown / TXT**: `Read` tool directly
+
+---
+
+#### Option D: Feishu Link
+
+When the user provides a Feishu doc/Wiki link, ask which method to use:
+
+```
+Feishu link detected. Choose read method:
+
+  [1] Browser Method (recommended)
+      Reuses your local Chrome login session
+      ✅ Works with internal docs requiring permissions
+      ✅ No token configuration needed
+      ⚠️  Requires Chrome + playwright installed locally
+
+  [2] MCP Method
+      Uses Feishu App Token via official API
+      ✅ Stable, no browser dependency
+      ✅ Can read messages (needs chat ID)
+      ⚠️  Requires App ID / App Secret setup
+      ⚠️  Internal docs need admin authorization for the app
+
+Choose [1/2]:
+```
+
+**Option 1 (Browser)**:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/feishu_browser.py \
+  --url "{feishu_url}" \
+  --target "{name}" \
+  --output /tmp/feishu_doc_out.txt
+```
+First use will open a browser window for login (one-time).
+
+**Option 2 (MCP)**:
+
+First-time setup:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/feishu_mcp_client.py --setup
+```
+
+Then read directly:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/feishu_mcp_client.py \
+  --url "{feishu_url}" \
+  --output /tmp/feishu_doc_out.txt
+```
+
+Read messages (needs chat ID, format `oc_xxx`):
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/feishu_mcp_client.py \
+  --chat-id "oc_xxx" \
+  --target "{name}" \
+  --limit 500 \
+  --output /tmp/feishu_msg_out.txt
+```
+
+Both methods output to files, then use `Read` to load results into analysis.
+
+---
+
+#### Option E: Paste Text
+
+User-pasted content is used directly as text material. No tools needed.
+
+---
+
+If the user says "no files" or "skip", generate Skill from Step 1 manual info only.
+
+### Step 3: Analyze Source Material
+
+Combine all collected materials and user-provided info, analyze along two tracks:
+
+**Track A (Work Skill)**:
+- Refer to `${CLAUDE_SKILL_DIR}/prompts/work_analyzer.md` for extraction dimensions
+- Extract: responsible systems, technical standards, workflow, output preferences, experience
+- Emphasize different aspects by role type (backend/frontend/ML/product/design)
+
+**Track B (Persona)**:
+- Refer to `${CLAUDE_SKILL_DIR}/prompts/persona_analyzer.md` for extraction dimensions
+- Translate user-provided tags into concrete behavior rules (see tag translation table)
+- Extract from materials: communication style, decision patterns, interpersonal behavior
+
+### Step 4: Generate and Preview
+
+Use `${CLAUDE_SKILL_DIR}/prompts/work_builder.md` to generate Work Skill content.
+Use `${CLAUDE_SKILL_DIR}/prompts/persona_builder.md` to generate Persona content (5-layer structure).
+
+Show the user a summary (5-8 lines each), ask:
+```
+Work Skill Summary:
+  - Responsible for: {xxx}
+  - Tech stack: {xxx}
+  - CR focus: {xxx}
+  ...
+
+Persona Summary:
+  - Core personality: {xxx}
+  - Communication style: {xxx}
+  - Decision pattern: {xxx}
+  ...
+
+Confirm generation? Or need adjustments?
+```
+
+### Step 5: Write Files
+
+After user confirmation, execute the following:
+
+**1. Create directory structure** (Bash):
+```bash
+mkdir -p colleagues/{slug}/versions
+mkdir -p colleagues/{slug}/knowledge/docs
+mkdir -p colleagues/{slug}/knowledge/messages
+mkdir -p colleagues/{slug}/knowledge/emails
+```
+
+**2. Write work.md** (Write tool):
+Path: `colleagues/{slug}/work.md`
+
+**3. Write persona.md** (Write tool):
+Path: `colleagues/{slug}/persona.md`
+
+**4. Write meta.json** (Write tool):
+Path: `colleagues/{slug}/meta.json`
+Content:
+```json
+{
+  "name": "{name}",
+  "slug": "{slug}",
+  "created_at": "{ISO_timestamp}",
+  "updated_at": "{ISO_timestamp}",
+  "version": "v1",
+  "profile": {
+    "company": "{company}",
+    "level": "{level}",
+    "role": "{role}",
+    "gender": "{gender}",
+    "mbti": "{mbti}"
+  },
+  "tags": {
+    "personality": [...],
+    "culture": [...]
+  },
+  "impression": "{impression}",
+  "knowledge_sources": [...imported file list],
+  "corrections_count": 0
+}
+```
+
+**5. Generate full SKILL.md** (Write tool):
+Path: `colleagues/{slug}/SKILL.md`
+
+SKILL.md structure:
+```markdown
+---
+name: colleague-{slug}
+description: {name}, {company} {level} {role}
+user-invocable: true
+---
+
+# {name}
+
+{company} {level} {role}{append gender and MBTI if available}
+
+---
+
+## PART A: Work Capabilities
+
+{full work.md content}
+
+---
+
+## PART B: Persona
+
+{full persona.md content}
+
+---
+
+## Execution Rules
+
+1. PART B decides first: what attitude to take on this task?
+2. PART A executes: use your technical skills to complete the task
+3. Always maintain PART B's communication style in output
+4. PART B Layer 0 rules have the highest priority and must never be violated
+```
+
+Inform user:
+```
+✅ Colleague Skill created!
+
+Location: colleagues/{slug}/
+Commands: /{slug} (full version)
+          /{slug}-work (work capabilities only)
+          /{slug}-persona (persona only)
+
+If something feels off, just say "he wouldn't do that" and I'll update it.
+```
+
+---
+
+## Evolution Mode: Append Files
+
+When user provides new files or text:
+
+1. Read new content using Step 2 methods
+2. `Read` existing `colleagues/{slug}/work.md` and `persona.md`
+3. Refer to `${CLAUDE_SKILL_DIR}/prompts/merger.md` for incremental analysis
+4. Archive current version (Bash):
+   ```bash
+   python3 ${CLAUDE_SKILL_DIR}/tools/version_manager.py --action backup --slug {slug} --base-dir ./colleagues
+   ```
+5. Use `Edit` tool to append incremental content to relevant files
+6. Regenerate `SKILL.md` (merge latest work.md + persona.md)
+7. Update `meta.json` version and updated_at
+
+---
+
+## Evolution Mode: Conversation Correction
+
+When user expresses "that's wrong" / "he should be":
+
+1. Refer to `${CLAUDE_SKILL_DIR}/prompts/correction_handler.md` to identify correction content
+2. Determine if it belongs to Work (technical/workflow) or Persona (personality/communication)
+3. Generate correction record
+4. Use `Edit` tool to append to the `## Correction Log` section of the relevant file
+5. Regenerate `SKILL.md`
+
+---
+
+## Management Commands
+
+`/list-colleagues`:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/skill_writer.py --action list --base-dir ./colleagues
+```
+
+`/colleague-rollback {slug} {version}`:
+```bash
+python3 ${CLAUDE_SKILL_DIR}/tools/version_manager.py --action rollback --slug {slug} --version {version} --base-dir ./colleagues
+```
+
+`/delete-colleague {slug}`:
+After confirmation:
 ```bash
 rm -rf colleagues/{slug}
 ```
