@@ -4,6 +4,8 @@
 
 ### From colleague.skill to dot-skill — Distill anyone into an AI Skill
 
+> 🍃 **Note:** This document is reproduced from upstream [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill). This fork ([wingsweihua/little-red-note-skill](https://github.com/wingsweihua/little-red-note-skill)) focuses on a single addition to that roadmap — **distilling Xiaohongshu (小红书) bloggers into AI Skills** — and tracks upstream for everything else.
+
 <br>
 
 We started with a simple idea: **when a colleague leaves, their knowledge walks out the door. Can we keep it?**
@@ -124,9 +126,9 @@ Anyone can become a `.skill`.
 | How | Where |
 |-----|-------|
 | Submit your .skill | [Gallery PR](https://titanwings.github.io/colleague-skill-site/) |
-| Discuss & propose | [GitHub Discussions](https://github.com/titanwings/colleague-skill/discussions) (coming soon) |
+| Discuss & propose | [GitHub Discussions](https://github.com/wingsweihua/little-red-note-skill/discussions) (coming soon) |
 | Chat in real time | [Discord](https://discord.gg/aRjmJBdK) |
-| Report bugs | [Issue](https://github.com/titanwings/colleague-skill/issues/new) |
+| Report bugs | [Issue](https://github.com/wingsweihua/little-red-note-skill/issues/new) |
 | Contribute code | Look for `good-first-issue` labels, or just open a PR |
 
 **We especially need:**

@@ -1,5 +1,10 @@
 <div align="center"> 
 
+> 🍃 **Fork notice:** This is a fork of [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill) named [wingsweihua/little-red-note-skill](https://github.com/wingsweihua/little-red-note-skill) that adds a Xiaohongshu (小红书) blogger collector. Translations below describe the upstream framework; for fork-specific install steps see the [main README](../../README.md) and [INSTALL.md](../../INSTALL.md).
+
+---
+
+
 # colleague.skill
 
 > *"You AI guys are traitors to the codebase — you've already killed frontend, now you're coming for backend, QA, ops, infosec, chip design, and eventually yourselves and all of humanity"*
@@ -99,16 +104,16 @@ These are independent open-source projects — this project does not include the
 ```bash
 # Install to current project (run at git repo root)
 mkdir -p .claude/skills
-git clone https://github.com/titanwings/colleague-skill .claude/skills/create-colleague
+git clone https://github.com/wingsweihua/little-red-note-skill .claude/skills/create-colleague
 
 # Or install globally (available in all projects)
-git clone https://github.com/titanwings/colleague-skill ~/.claude/skills/create-colleague
+git clone https://github.com/wingsweihua/little-red-note-skill ~/.claude/skills/create-colleague
 ```
 
 ### OpenClaw
 
 ```bash
-git clone https://github.com/titanwings/colleague-skill ~/.openclaw/workspace/skills/create-colleague
+git clone https://github.com/wingsweihua/little-red-note-skill ~/.openclaw/workspace/skills/create-colleague
 ```
 
 ### Dependencies (optional)
@@ -253,9 +258,9 @@ create-colleague/
 
 <a href="https://www.star-history.com/?repos=titanwings%2Fcolleague-skill&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=titanwings/colleague-skill&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=titanwings/colleague-skill&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=titanwings/colleague-skill&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=wingsweihua/little-red-note-skill&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=wingsweihua/little-red-note-skill&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=wingsweihua/little-red-note-skill&type=date&legend=top-left" />
  </picture>
 </a>
 

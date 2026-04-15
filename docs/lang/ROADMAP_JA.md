@@ -1,5 +1,10 @@
 <div align="center">
 
+> 🍃 **Fork notice:** This is a fork of [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill) named [wingsweihua/little-red-note-skill](https://github.com/wingsweihua/little-red-note-skill) that adds a Xiaohongshu (小红书) blogger collector. Translations below describe the upstream framework; for fork-specific install steps see the [main README](../../README.md) and [INSTALL.md](../../INSTALL.md).
+
+---
+
+
 # dot-skill Roadmap
 
 ### colleague.skill から dot-skill へ -- 誰でも AI Skill に蒸留できる
@@ -124,9 +129,9 @@
 | 方法 | リンク |
 |------|--------|
 | .skill を投稿する | [Gallery PR](https://titanwings.github.io/colleague-skill-site/) |
-| 議論・提案する | [GitHub Discussions](https://github.com/titanwings/colleague-skill/discussions)（近日公開） |
+| 議論・提案する | [GitHub Discussions](https://github.com/wingsweihua/little-red-note-skill/discussions)（近日公開） |
 | リアルタイムでチャット | [Discord](https://discord.gg/aRjmJBdK) |
-| バグを報告する | [Issue](https://github.com/titanwings/colleague-skill/issues/new) |
+| バグを報告する | [Issue](https://github.com/wingsweihua/little-red-note-skill/issues/new) |
 | コードを貢献する | `good-first-issue` ラベルを探すか、PR を直接作成 |
 
 **特に必要としています：**

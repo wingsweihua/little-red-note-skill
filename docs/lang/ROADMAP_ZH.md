@@ -1,5 +1,10 @@
 <div align="center">
 
+> 🍃 **Fork notice:** This is a fork of [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill) named [wingsweihua/little-red-note-skill](https://github.com/wingsweihua/little-red-note-skill) that adds a Xiaohongshu (小红书) blogger collector. Translations below describe the upstream framework; for fork-specific install steps see the [main README](../../README.md) and [INSTALL.md](../../INSTALL.md).
+
+---
+
+
 # dot-skill Roadmap 🗺️
 
 ### 从「同事.skill」到「dot-skill」—— 把任何人蒸馏成 AI Skill
@@ -125,9 +130,9 @@
 | 方式 | 链接 |
 |------|------|
 | 提交你的 .skill | [Gallery PR](https://titanwings.github.io/colleague-skill-site/) |
-| 讨论与提议 | [GitHub Discussions](https://github.com/titanwings/colleague-skill/discussions)（即将开放） |
+| 讨论与提议 | [GitHub Discussions](https://github.com/wingsweihua/little-red-note-skill/discussions)（即将开放） |
 | 实时交流 | [Discord](https://discord.gg/aRjmJBdK) |
-| 报告 Bug | [Issue](https://github.com/titanwings/colleague-skill/issues/new) |
+| 报告 Bug | [Issue](https://github.com/wingsweihua/little-red-note-skill/issues/new) |
 | 贡献代码 | 看 `good-first-issue` 标签，或直接提 PR |
 
 **我们尤其需要：**

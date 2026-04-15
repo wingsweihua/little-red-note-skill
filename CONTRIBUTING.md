@@ -1,4 +1,8 @@
-# Contributing to colleague.skill / 贡献指南
+# Contributing to little-red-note-skill / 贡献指南
+
+> 🍃 This is a fork of [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill) that adds a Xiaohongshu (小红书) collector. **Core framework changes (Feishu / DingTalk / Slack / Email collectors, skill writer, persona engine) belong upstream.** This fork accepts PRs that improve the XHS pipeline (`tools/xhs_collector.py`, `tools/get_xhs_latest_notes.py`, `tools/build_colleague_from_xhs.py`) or fork-specific docs.
+>
+> 本仓库是 [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill) 的 fork，新增小红书采集器。**核心框架的修改请提交到上游仓库**，本 fork 仅接受小红书相关 PR。
 
 > English first, 中文在下方。
 
@@ -22,7 +26,7 @@ Thank you for considering a contribution! This project turns colleagues (and any
 ## Development setup / 开发环境
 
 ```bash
-git clone https://github.com/titanwings/colleague-skill.git
+git clone https://github.com/wingsweihua/little-red-note-skill.git
 cd colleague-skill
 pip3 install -r requirements.txt
 ```
@@ -106,7 +110,7 @@ Don't hit live APIs in CI. Mock with `unittest.mock` or the `responses` library.
 ## Community / 社区
 
 - [💬 Discord](https://discord.gg/aRjmJBdK) — main chat
-- [GitHub Discussions](https://github.com/titanwings/colleague-skill/discussions) — long-form Q&A and design threads
+- [GitHub Discussions](https://github.com/wingsweihua/little-red-note-skill/discussions) — long-form Q&A and design threads
 - [Skill gallery](https://titanwings.github.io/colleague-skill-site/) — browse and submit skills
 
 Be kind. Assume good intent. Disagree on the idea, not the person.
