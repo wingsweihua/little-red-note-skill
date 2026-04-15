@@ -1,3 +1,4 @@
 [submodule "third_party/Spider_XHS"]
 	path = third_party/Spider_XHS
 	url = https://github.com/cv-cat/Spider_XHS.git
+	ignore = dirty

@@ -1,4 +1,6 @@
-# 同事.skill 安装说明
+# little-red-note-skill 安装说明
+
+> 🍃 **本仓库是 [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill) 的 fork**，新增了**小红书博主蒸馏**能力（基于 [Spider_XHS](https://github.com/cv-cat/Spider_XHS) submodule）。其余飞书/钉钉/Slack/邮件采集功能与上游一致。
 
 ---
 
@@ -14,10 +16,10 @@ cd $(git rev-parse --show-toplevel)
 
 # 方式 1：安装到当前项目
 mkdir -p .claude/skills
-git clone https://github.com/titanwings/colleague-skill .claude/skills/create-colleague
+git clone --recurse-submodules https://github.com/wingsweihua/little-red-note-skill .claude/skills/create-colleague
 
 # 方式 2：安装到全局（所有项目都能用）
-git clone https://github.com/titanwings/colleague-skill ~/.claude/skills/create-colleague
+git clone --recurse-submodules https://github.com/wingsweihua/little-red-note-skill ~/.claude/skills/create-colleague
 ```
 
 然后在 Claude Code 中说 `/create-colleague` 即可启动。
@@ -30,7 +32,7 @@ git clone https://github.com/titanwings/colleague-skill ~/.claude/skills/create-
 
 ```bash
 # 克隆到 OpenClaw 的 skills 目录
-git clone https://github.com/titanwings/colleague-skill ~/.openclaw/workspace/skills/create-colleague
+git clone --recurse-submodules https://github.com/wingsweihua/little-red-note-skill ~/.openclaw/workspace/skills/create-colleague
 ```
 
 重启 OpenClaw session，说 `/create-colleague` 启动。
@@ -99,6 +101,58 @@ python3 tools/slack_auto_collector.py --setup
 ```
 
 > Slack 详细配置见下方「[Slack 自动采集配置](#slack-自动采集配置)」章节
+
+---
+
+## 小红书博主采集配置（本 fork 新增）
+
+### 前置条件
+
+- Python 3.9+
+- Node.js 16+（Spider_XHS 使用 JS 生成签名）
+- 一个**已登录小红书的浏览器**（用于复制 Cookie）
+
+### 安装步骤
+
+```bash
+# 1. 确保 Spider_XHS submodule 已拉取
+git submodule update --init --recursive
+
+# 2. 安装 Spider_XHS 依赖
+cd third_party/Spider_XHS
+pip3 install -r requirements.txt
+npm install
+cd ../..
+
+# 3. 配置 Cookie
+cp .env.example .env
+# 编辑 .env，填入 COOKIES=...
+# 获取方式：浏览器登录小红书 → DevTools → Network → 任意请求 → 复制完整 Cookie 值
+```
+
+### 备用方案：Playwright 浏览器登录态
+
+如果不想手动复制 Cookie，可以用浏览器自动化：
+
+```bash
+pip3 install playwright
+playwright install chromium
+```
+
+### 使用
+
+```bash
+# 方案 A：Spider_XHS API（速度快，依赖 Cookie）
+python3 tools/get_xhs_latest_notes.py --user-id <小红书 user_id> --limit 30
+
+# 方案 B：Playwright 浏览器（速度慢但稳定，依赖登录态）
+python3 tools/xhs_collector.py --user-id <小红书 user_id> --out ./colleagues/xhs-博主名/raw --max 50
+
+# 蒸馏成 colleague skill
+python3 tools/build_colleague_from_xhs.py --raw ./colleagues/xhs-博主名/raw --slug xhs-博主名
+```
+
+> ⚠️ **使用前请阅读 [README 中的免责声明](README.md#%EF%B8%8F-disclaimer--免责声明)**：仅供个人学习研究，须遵守小红书 ToS，不得用于商业批量爬取。
 
 ---
 
