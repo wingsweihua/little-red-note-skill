@@ -1,27 +1,73 @@
-# Generated colleague skills (user data, not committed)
+# ============================================================
+# Generated colleague skills (real user data, never commit)
+# ============================================================
 colleagues/
-!colleagues/example_zhangsan/
+!colleagues/example_*/
+!colleagues/.gitkeep
 
+# ============================================================
+# Secrets & credentials  --  NEVER commit
+# ============================================================
+.env
+.env.*
+!.env.example
+*.cookie
+*.cookies
+cookies.txt
+secrets.json
+~/.colleague-skill/
+
+# Browser login state (contains session cookies)
+.xhs_user_data/
+playwright-data/
+.playwright/
+
+# ============================================================
+# Third-party vendored code (prefer git submodule)
+# ============================================================
+third_party/*/node_modules/
+third_party/Spider_XHS/.env
+third_party/Spider_XHS/static/
+# Uncomment to keep third_party out entirely:
+# third_party/
+
+# ============================================================
 # Python
+# ============================================================
 __pycache__/
 *.py[cod]
 *.pyo
+*.egg-info/
 .venv/
 venv/
-*.egg-info/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Config with credentials
-~/.colleague-skill/
+# ============================================================
+# Node
+# ============================================================
+node_modules/
+npm-debug.log*
+yarn-error.log*
 
-# Playwright browser data
-playwright-data/
-
-# Temp files
+# ============================================================
+# Temp / scratch
+# ============================================================
 /tmp/feishu_*.txt
 /tmp/email_*.txt
 /tmp/dingtalk_*.txt
 knowledge/
+*.log
+*.tmp
 
-# OS
+# ============================================================
+# IDE / OS
+# ============================================================
+.idea/
+.vscode/
+.cursor/
+*.swp
 .DS_Store
 Thumbs.db

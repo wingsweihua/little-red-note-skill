@@ -1,6 +1,8 @@
 <div align="center">
 
-# colleague.skill
+# little-red-note-skill
+
+> 🍃 **Forked from [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill)** — adds a Xiaohongshu (小红书) data collector so you can distill any 小红书 blogger into a colleague.skill. All credit for the original framework goes to the upstream authors.
 
 > *"You AI guys are traitors to the codebase — you've already killed frontend, now you're coming for backend, QA, ops, infosec, chip design, and eventually yourselves and all of humanity"*
 
@@ -99,22 +101,31 @@ These are independent open-source projects — this project does not include the
 ```bash
 # Install to current project (run at git repo root)
 mkdir -p .claude/skills
-git clone https://github.com/titanwings/colleague-skill .claude/skills/create-colleague
+git clone --recurse-submodules https://github.com/wingsweihua/little-red-note-skill .claude/skills/create-colleague
 
 # Or install globally (available in all projects)
-git clone https://github.com/titanwings/colleague-skill ~/.claude/skills/create-colleague
+git clone --recurse-submodules https://github.com/wingsweihua/little-red-note-skill ~/.claude/skills/create-colleague
 ```
 
 ### OpenClaw
 
 ```bash
-git clone https://github.com/titanwings/colleague-skill ~/.openclaw/workspace/skills/create-colleague
+git clone --recurse-submodules https://github.com/wingsweihua/little-red-note-skill ~/.openclaw/workspace/skills/create-colleague
 ```
+
+> **Forgot `--recurse-submodules`?** Run inside the cloned repo:
+> ```bash
+> git submodule update --init --recursive
+> ```
+> This is required to populate `third_party/Spider_XHS` (used by the Xiaohongshu collector).
 
 ### Dependencies (optional)
 
 ```bash
 pip3 install -r requirements.txt
+
+# Copy the env template and fill in the credentials you need
+cp .env.example .env
 ```
 
 > Feishu/DingTalk/Slack auto-collection requires App credentials. See [INSTALL.md](INSTALL.md) for details.
@@ -233,6 +244,38 @@ create-colleague/
 
 ---
 
+## ⚠️ Disclaimer / 免责声明
+
+> **Read this before you use any data collector in this repo.**
+
+**English**
+
+This project is provided **for personal learning, research, and lawful productivity use only**. By using it you agree to the following:
+
+1. **Respect platform Terms of Service.** The included collectors (Xiaohongshu / Feishu / DingTalk / Slack / Email / Web scrapers) interact with third-party platforms whose ToS may prohibit automated access. You are solely responsible for ensuring your usage is permitted on each platform. Do **not** use this tool for commercial scraping, mass data harvesting, account abuse, or anything that would violate `robots.txt` or rate limits.
+2. **Get consent from real people.** "Distilling a colleague" means processing another person's writing, voice, and behavioral patterns. You **must obtain that person's informed consent** before collecting or shipping a Skill that imitates them. Distilling minors, public figures without consent, or anyone in a non-consensual context is not supported and not endorsed.
+3. **Handle personal data responsibly.** Collected raw data (chat logs, emails, docs) frequently contains PII and confidential business information. Store it locally, encrypt where appropriate, and **never commit `colleagues/`, `.env`, or `.xhs_user_data/` to a public repo** — the bundled `.gitignore` already excludes them.
+4. **No warranty.** Software is provided "AS IS" under the MIT License. The authors accept no liability for account bans, data loss, legal action, awkward HR conversations, or any other consequence arising from use or misuse of this code.
+5. **Third-party code.** `third_party/` contains code from other projects (e.g. Spider_XHS) under their own licenses. Their inclusion is not an endorsement; review and comply with each upstream license separately.
+
+If you cannot agree to all of the above, **do not use this software.**
+
+---
+
+**中文**
+
+本项目仅供 **个人学习、研究及合法生产力用途**。使用即视为同意以下条款：
+
+1. **遵守平台服务条款**：本仓库附带的采集器（小红书 / 飞书 / 钉钉 / Slack / 邮件 / 网页爬虫）会访问第三方平台，相关平台的 ToS 可能禁止自动化访问。**确保你的使用方式被目标平台允许是你自己的责任**。严禁用于商业爬取、批量数据收割、账号滥用，以及任何违反 `robots.txt` 或速率限制的行为。
+2. **必须获得当事人同意**："蒸馏同事"意味着处理他人的文字、声音和行为模式。在采集和交付一个模仿真人的 Skill 之前，你**必须取得当事人的知情同意**。本项目不支持也不鼓励对未成年人、未经同意的公众人物或任何非自愿对象进行蒸馏。
+3. **妥善处理个人数据**：原始数据（聊天记录、邮件、文档）通常包含隐私信息和商业机密。请本地存储、按需加密，**绝不要把 `colleagues/`、`.env`、`.xhs_user_data/` 提交到公开仓库** —— 项目自带的 `.gitignore` 已默认排除。
+4. **无任何担保**：本软件按 MIT 许可证 "AS IS" 原样提供。作者对账号封禁、数据丢失、法律风险、HR 谈话等一切因使用或滥用本代码而产生的后果不承担任何责任。
+5. **第三方代码**：`third_party/` 目录包含其他项目代码（如 Spider_XHS），遵循各自的开源许可证。引入不代表背书，请自行审阅并遵守上游 LICENSE。
+
+**如果无法接受以上任何一条，请勿使用本软件。**
+
+---
+
 ## Notes
 
 - **Source material quality = Skill quality**: chat logs + long docs > manual description only
@@ -251,11 +294,11 @@ create-colleague/
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=titanwings%2Fcolleague-skill&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=wingsweihua%2Flittle-red-note-skill&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=titanwings/colleague-skill&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=titanwings/colleague-skill&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=titanwings/colleague-skill&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=wingsweihua/little-red-note-skill&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=wingsweihua/little-red-note-skill&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=wingsweihua/little-red-note-skill&type=date&legend=top-left" />
  </picture>
 </a>
 
